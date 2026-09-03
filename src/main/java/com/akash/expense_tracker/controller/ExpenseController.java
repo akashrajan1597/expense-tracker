@@ -1,11 +1,14 @@
 package com.akash.expense_tracker.controller;
 
+import com.akash.expense_tracker.entity.Category;
 import org.springframework.http.HttpStatus;
 import com.akash.expense_tracker.dto.ExpenseRequest;
 import com.akash.expense_tracker.entity.Expense;
 import com.akash.expense_tracker.service.ExpenseService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -23,7 +26,19 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public List<Expense> getAllExpenses() {
+    public List<Expense> getExpenses(
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
+
+        if (category != null) {
+            return expenseService.getExpensesByCategory(category);
+        }
+
+        if (from != null && to != null) {
+            return expenseService.getExpensesByDateRange(from, to);
+        }
+
         return expenseService.getAllExpenses();
     }
 

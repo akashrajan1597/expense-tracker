@@ -3,10 +3,13 @@ package com.akash.expense_tracker.service;
 import com.akash.expense_tracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import com.akash.expense_tracker.entity.Category;
 import com.akash.expense_tracker.dto.ExpenseRequest;
 import com.akash.expense_tracker.entity.Expense;
 import com.akash.expense_tracker.exception.ExpenseNotFoundException;
+import com.akash.expense_tracker.exception.InvalidDateRangeException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -36,6 +39,19 @@ public class ExpenseService {
     public Expense getExpenseById(Long id) {
         return expenseRepository.findById(id)
                 .orElseThrow(() -> new ExpenseNotFoundException(id));
+    }
+
+    public List<Expense> getExpensesByCategory(Category category) {
+        return expenseRepository.findByCategory(category);
+    }
+
+    public List<Expense> getExpensesByDateRange(LocalDate from, LocalDate to) {
+
+        if (from.isAfter(to)) {
+            throw new InvalidDateRangeException();
+        }
+
+        return expenseRepository.findByDateBetween(from, to);
     }
 
     public Expense updateExpense(Long id, ExpenseRequest request) {

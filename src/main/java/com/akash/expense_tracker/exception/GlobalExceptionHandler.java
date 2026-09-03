@@ -28,4 +28,10 @@ public class GlobalExceptionHandler {
 
         return errors;
     }
+
+    @ExceptionHandler(InvalidDateRangeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidDateRange(InvalidDateRangeException exception) {
+        return exception.getMessage();
+    }
 }
