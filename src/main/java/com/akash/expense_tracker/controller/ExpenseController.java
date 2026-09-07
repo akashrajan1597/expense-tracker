@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -29,17 +30,12 @@ public class ExpenseController {
     public List<Expense> getExpenses(
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) LocalDate from,
-            @RequestParam(required = false) LocalDate to) {
+            @RequestParam(required = false) LocalDate to,
+            @RequestParam(required = false) BigDecimal minAmount,
+            @RequestParam(required = false) BigDecimal maxAmount) {
 
-        if (category != null) {
-            return expenseService.getExpensesByCategory(category);
-        }
-
-        if (from != null && to != null) {
-            return expenseService.getExpensesByDateRange(from, to);
-        }
-
-        return expenseService.getAllExpenses();
+        return expenseService.getExpensesWithFilters(
+                category, from, to, minAmount, maxAmount);
     }
 
     @GetMapping("/{id}")
