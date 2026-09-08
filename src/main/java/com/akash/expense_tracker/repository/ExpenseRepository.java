@@ -2,11 +2,13 @@ package com.akash.expense_tracker.repository;
 
 import com.akash.expense_tracker.entity.Category;
 import com.akash.expense_tracker.entity.Expense;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -19,10 +21,11 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
                     AND (:minAmount IS NULL OR e.amount >= :minAmount)
                     AND (:maxAmount IS NULL OR e.amount <= :maxAmount)
             """)
-    List<Expense> findExpesesWithFilters(
+    Page<Expense> findExpensesWithFilters(
             @Param("category") Category category,
             @Param("from") LocalDate from,
             @Param("to") LocalDate to,
             @Param("minAmount") BigDecimal minAmount,
-            @Param("maxAmount") BigDecimal maxAmount);
+            @Param("maxAmount") BigDecimal maxAmount,
+            Pageable pageable);
 }

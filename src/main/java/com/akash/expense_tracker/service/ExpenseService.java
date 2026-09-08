@@ -2,7 +2,6 @@ package com.akash.expense_tracker.service;
 
 import com.akash.expense_tracker.repository.ExpenseRepository;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.akash.expense_tracker.entity.Category;
@@ -10,6 +9,8 @@ import com.akash.expense_tracker.dto.ExpenseRequest;
 import com.akash.expense_tracker.entity.Expense;
 import com.akash.expense_tracker.exception.ExpenseNotFoundException;
 import com.akash.expense_tracker.exception.InvalidDateRangeException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,16 +45,17 @@ public class ExpenseService {
                 .orElseThrow(() -> new ExpenseNotFoundException(id));
     }
 
-    public List<Expense> getExpensesWithFilters(
+    public Page<Expense> getExpensesWithFilters(
             Category category,
             LocalDate from,
             LocalDate to,
             BigDecimal minAmount,
-            BigDecimal maxAmount) {
+            BigDecimal maxAmount,
+            Pageable pageable) {
         if (from != null && to != null && from.isAfter(to)) {
             throw new InvalidDateRangeException();
         }
-        return expenseRepository.findExpesesWithFilters(category, from, to, minAmount, maxAmount);
+        return expenseRepository.findExpensesWithFilters(category, from, to, minAmount, maxAmount, pageable);
     }
 
     public Expense updateExpense(Long id, ExpenseRequest request) {
