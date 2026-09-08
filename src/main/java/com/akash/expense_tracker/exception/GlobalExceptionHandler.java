@@ -34,4 +34,10 @@ public class GlobalExceptionHandler {
     public String handleInvalidDateRange(InvalidDateRangeException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler(IncomeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleIncomeNotFound(IncomeNotFoundException exception) {
+        return exception.getMessage();
+    }
 }
